@@ -1,0 +1,13 @@
+topics:
+  /global_costmap/costmap_raw: 1
+  /head_front_camera/rgb/image_raw: 2
+  /joy_priority: 3
+  /local_costmap/voxel_grid: 4
+  /local_costmap/costmap: 5
+  /local_costmap/clearing_endpoints: 6
+  /local_costmap/published_footprint: 7
+  /map: 8
+  /mobile_base_controller/odom: 9
+  /power/is_emergency: 10
+  /rosout: 11
+  /scan_raw: 12
