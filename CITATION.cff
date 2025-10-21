@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: "Inyesto-Alonso"
+    given-names: "Laura"
+  - family-names: "Álvarez-Aparicio"
+    given-names: "Claudia"
+  - family-names: "Sobrín-Hidalgo"
+    given-names: "David"
+  - family-names: "Campazas-Vega"
+    given-names: "Adrián"
+  - family-names: "Matellán-Olivera"
+    given-names: "Vicente"
+  - family-names: "Guerrero-Higueras"
+    given-names: "Ángel Manuel"
+title: "ACOLYTE"
+url: "https://github.com/uleroboticsgroup/ACOLYTE"
