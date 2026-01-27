@@ -6,9 +6,12 @@ specified rosbag file.
 It also creates and stores the system data records that are generated.
 """
 
+
 import hashlib
 import logging
+import time
 import rosbag2_py
+from multiprocessing import Process
 
 from cv_bridge import CvBridge
 
@@ -18,12 +21,17 @@ from rosidl_runtime_py.utilities import get_message
 from bcubed.blockchain.node import Node
 from bcubed.constants.records.fields.id_value_fields import IdValueFields
 from bcubed.constants.records.fields.system_data_fields import SystemDataFields
+from bcubed.constants.records.fields.meta_data_fields import MetaDataFields
 from bcubed.records.fields.id_uint8_value_string_field import IdUint8ValueStringField
+from bcubed.records.meta_data_record import MetaDataRecord
 
-from acolyte.config.config import Config
+from acolyte.config.acolyte_config import AcolyteConfig
+from acolyte.constants.config_categories import ConfigCategories
 from acolyte.constants.config_keys import ConfigKeys
 from acolyte.constants.rosbag_files import RosBagFileExtensions, RosBagFileTypes
 from acolyte.readers.reader import Reader
+from acolyte.readers.operating_system_static_reader import OperatingSystemStaticInfo
+from acolyte.reader_daemons.operating_system_reader_daemon import OperatingSystemReaderDaemon
 
 
 SERIALIZATION_FORMAT = "cdr"
@@ -37,19 +45,42 @@ class RosBagReader(Reader):
 
     __logger = logging.getLogger(__name__)
 
-    def __init__(self, node: Node, rosbag_file: str):
+    def __init__(self, node: Node, reader: rosbag2_py.SequentialReader, rosbag_file: str, operating_system: bool):
         self.__rosbag_file = rosbag_file
         self.__file_type = self.__get_file_type()
-        self.__topics = Config().get_property(ConfigKeys.TOPICS)
-        self.__reader = self.__configure_reader()
+        self.__topics = AcolyteConfig().get_property(ConfigCategories.TOPICS)
+        self.__operating_system = operating_system
+
+        self.__reader = reader
+        self.__configure_reader()
+        self.__os_static_info = OperatingSystemStaticInfo()
+
         self.__ros_bag_messages = self.__reader.get_metadata().message_count
         self.__readed_messages = 0
 
+        self.__ros_bag_reading_retry = AcolyteConfig().get_property(
+            ConfigKeys.ROSBAG_READING_RETRY, ConfigCategories.TIMINGS)
+
         super().__init__(node)
 
+    def __run_os_reader_daemon(self):
+        os_reader_daemon = OperatingSystemReaderDaemon(self._node)
+        os_reader_daemon.start()
+
+    def __run_daemon(self, daemon_function):
+        self.__logger.info("Running daemon...")
+
+        daemon = Process(target=daemon_function, args=[], daemon=False)
+
+        daemon.start()
+        daemon.join()
+
+    def __restart_reader(self):
+        self.__reader = rosbag2_py.SequentialReader()
+        self.__configure_reader()
+
     def __configure_reader(self):
-        reader = rosbag2_py.SequentialReader()
-        reader.open(
+        self.__reader.open(
             rosbag2_py.StorageOptions(
                 uri=self.__rosbag_file, storage_id=self.__file_type),
             rosbag2_py.ConverterOptions(
@@ -60,9 +91,7 @@ class RosBagReader(Reader):
 
         storage_filter = rosbag2_py.StorageFilter(
             topics=list(self.__topics.keys()))
-        reader.set_filter(storage_filter)
-
-        return reader
+        self.__reader.set_filter(storage_filter)
 
     def __get_file_type(self):
         rosbag_file_splitted = self.__rosbag_file.split(".")
@@ -98,7 +127,28 @@ class RosBagReader(Reader):
 
         self.__logger.info("%s messages have been processed.", i)
 
+    def create_meta_data_record(self, name: str, responsible: str):
+        meta_data_record = MetaDataRecord(responsible)
+
+        meta_data_record[MetaDataFields.FIELD_SYS_N] = self.__os_static_info.get_system_name()
+        meta_data_record[MetaDataFields.FIELD_SYS_V] = self.__os_static_info.get_release_version()
+        meta_data_record[MetaDataFields.FIELD_SYS_S] = self.__os_static_info.get_serial_number()
+        meta_data_record[MetaDataFields.FIELD_SYS_M] = self.__os_static_info.get_vendor_id(
+        )
+        meta_data_record[MetaDataFields.FIELD_BBN_V] = name
+        meta_data_record[MetaDataFields.FIELD_NET_N] = self.__os_static_info.get_network_name()
+        meta_data_record[MetaDataFields.FIELD_OSY_T] = self.__os_static_info.get_operating_system_type(
+        )
+        meta_data_record[MetaDataFields.FIELD_SYS_P] = self.__os_static_info.get_system_processors(
+        )
+
+        return meta_data_record
+
     def get_messages(self):
+
+        if self.__operating_system:
+            self.__run_daemon(self.__run_os_reader_daemon)
+
         bridge = CvBridge()
 
         for topic, msg, msg_type, timestamp, i in self.__read_messages():
@@ -140,7 +190,12 @@ class RosBagReader(Reader):
                 self.__logger.info("Processed messages: %s",
                                    self.__readed_messages)
 
-        self.__reader = self.__configure_reader()
+        self.__restart_reader()
+
+        # This is necessary if the blockchain network is as fast as the Rosbag recording
+        if self.__ros_bag_messages == self.__reader.get_metadata().message_count:
+            time.sleep(self.__ros_bag_reading_retry)
+            self.__restart_reader()
 
         if self.__ros_bag_messages != self.__reader.get_metadata().message_count:
             self.__ros_bag_messages = self.__reader.get_metadata().message_count

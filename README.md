@@ -51,6 +51,11 @@ Follow the instructions available in [BCubed README.md](https://github.com/ulero
 (.venv) $ acolyte -a store -i <rosbag2_file> -r <responsible> -w rosbag -os
 ```
 
+#### Store records that are created by reading information from the vehicle's OBD-II port
+```
+(.venv) $ acolyte -a store -i /dev/null <responsible> -w obd
+```
+
 #### Get stored records by a timeframe
 ```
 (.venv) $ acolyte -a get_by_timestamp -ts <timestamp_start> -te <timestamp_end>
@@ -73,3 +78,4 @@ This research is part of the project TESCAC, financed by “European Union NextG
 <p align="center">
   <img src="./docs/INCIBE.jpg" width="100%" />
 </p>
+

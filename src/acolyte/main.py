@@ -5,6 +5,7 @@ This is the main file.
 import argparse
 import sys
 
+from bcubed.bcubed import BCubed
 from bcubed.utilities.datetime_help import get_current_timestamp
 
 from acolyte.acolyte import Acolyte
@@ -52,7 +53,7 @@ def parse_arguments():
         "-w",
         "--way",
         default="rosbag",
-        choices=["rosbag"],
+        choices=["rosbag", "obd"],
         required='store' in sys.argv,
         help="way to read data",
     )
@@ -95,11 +96,17 @@ def main():
     arguments_validator = ArgumentsValidator(arguments)
     are_valid = arguments_validator.validate_arguments()
 
-    if are_valid:
-        acolyte = Acolyte(arguments)
+    try:
+        if are_valid:
+            bcubed = BCubed()
+            acolyte = Acolyte(bcubed)
 
-        acolyte.run(arguments)
+            acolyte.run(arguments)
+            acolyte.stop(arguments)
+
+    except KeyboardInterrupt:
         acolyte.stop(arguments)
+        sys.exit()
 
 
 if __name__ == "__main__":

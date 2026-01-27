@@ -6,7 +6,7 @@ related to rosbag file extensions and types.
 """
 
 
-class RosBagFileExtensions:
+class RosBagFileExtensions:  # pylint: disable=too-few-public-methods
     """
     It contains only constants related to rosbag file extensions.
     Add values as required.
@@ -16,7 +16,7 @@ class RosBagFileExtensions:
     MCAP = "mcap"
 
 
-class RosBagFileTypes:
+class RosBagFileTypes:  # pylint: disable=too-few-public-methods
     """
     It contains only constants related to rosbag file types.
     Add values as required.

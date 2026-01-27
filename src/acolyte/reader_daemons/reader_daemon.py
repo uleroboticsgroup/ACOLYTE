@@ -30,35 +30,43 @@ class ReaderDaemon:
     It contains the base class for all the ReaderDaemons.
     """
 
-    def __init__(self, working_dir: str, pid_path: str, txt_path: str):
+    def __init__(self, working_dir: str, pid_path: str):
         self._node = None
 
         self.__working_dir = working_dir
         self.__pid_path = pid_path
-        self.__txt_path = txt_path
 
         self._thread_continue = True
 
         self._logger = logging.getLogger(__name__)
 
         if not os.path.exists(Path(self.__working_dir)):
-            self._logger.info("Creating all files")
+            self._logger.info("Creating all files.")
             os.mkdir(Path(self.__working_dir))
 
     def __del__(self):
-        self._logger.info("Deleting all files")
+        max_time = 6
 
-        time.sleep(5)
+        while (os.path.exists(Path(self.__pid_path)) and max_time > 0):
+            self._logger.info("Waiting for the daemon to stop.")
+            time.sleep(3)
+            max_time = max_time - 1
 
-        if not os.path.exists(Path(self.__pid_path)):
-            if os.path.exists(Path(self.__txt_path)):
-                os.remove(Path(self.__txt_path))
+        for root, dirs, files in os.walk(self.__working_dir, topdown=False):
+            for name in files:
+                os.remove(os.path.join(root, name))
+            for name in dirs:
+                os.rmdir(os.path.join(root, name))
+
+        if os.path.exists(Path(self.__working_dir)):
+            self._logger.info("Deleting all files.")
+            os.rmdir(Path(self.__working_dir))
 
     @abstractmethod
     def _run_thread(self):
         self._logger.info("Running daemon thread.")
 
-    def __stop_thread(self, signum=None, frame=None):
+    def _stop_thread(self, signum=None, frame=None):
         self._logger.info("Stopping daemon thread.")
         self._thread_continue = False
 
@@ -78,9 +86,9 @@ class ReaderDaemon:
                 stdout=sys.stdout,
                 stderr=sys.stderr,
                 signal_map={
-                    signal.SIGTERM: self.__stop_thread,
-                    signal.SIGTSTP: self.__stop_thread,
-                    signal.SIGINT: self.__stop_thread,
+                    signal.SIGTERM: self._stop_thread,
+                    signal.SIGTSTP: self._stop_thread,
+                    signal.SIGINT: self._stop_thread,
                     # signal.SIGKILL: self.thread_stop,  # SIGKILL is an Invalid argument
                     # signal.SIGUSR1: daemon_status,
                     # signal.SIGUSR2: daemon_status,
@@ -114,9 +122,9 @@ class ReaderDaemon:
                 try:
                     os.kill(int(file.readline()), signal.SIGTERM)
 
-                except ProcessLookupError as ple:
+                except (ProcessLookupError, ValueError) as error:
                     os.remove(self.__pid_path)
-                    self._logger.error("ERROR: %s", ple)
+                    self._logger.error("ERROR: %s", error)
 
         else:
             self._logger.error(

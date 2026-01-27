@@ -1,3 +1,13 @@
+paths:
+  daemon_working_dir: '/tmp/os_daemon/'
+  daemon_pid_file: '/tmp/os_daemon/os_daemon.pid'
+  obd_port: '/dev/ttyUSB0'
+  obd_baudrate: 115200
+timings:
+  system_info_retrieval: 10
+  rosbag_reading_retry: 5
+  obd_query_interval: 10 # Max 20 seconds. Higher values prevent records retrieval due to MAX_EMPTY_RETRIES limit.
+  obd_connection_timeout: 30 # Timeout in seconds for OBD connection attempts.
 topics:
   /global_costmap/costmap_raw: 1
   /head_front_camera/rgb/image_raw: 2
@@ -11,3 +21,41 @@ topics:
   /power/is_emergency: 10
   /rosout: 11
   /scan_raw: 12
+obd:
+  sysX:
+    BAROMETRIC_PRESSURE: 1
+    CVN: 2
+    DISTANCE_SINCE_DTC_CLEAR: 3
+    EVAP_VAPOR_PRESSURE: 4
+    FREEZE_DTC: 5
+    FUEL_LEVEL: 6
+    FUEL_PRESSURE: 7
+    GET_CURRENT_DTC: 8
+    OBD_COMPLIANCE: 9
+    STATUS: 10
+    STATUS_DRIVE_CYCLE: 11
+    TIME_SINCE_DTC_CLEARED: 12
+    WARMUPS_SINCE_DTC_CLEAR: 13
+  tmpV:
+    CATALYST_TEMP_B1S1: 1
+    COOLANT_TEMP: 2
+    INTAKE_TEMP: 3
+  actD:
+    COMMANDED_EGR: 1
+    COMMANDED_EQUIV_RATIO: 2
+  actV:
+    EGR_ERROR: 1
+    ENGINE_LOAD: 2
+    LONG_FUEL_TRIM_1: 3
+    MAF: 4
+    RPM: 5
+    SPEED: 6
+    SHORT_FUEL_TRIM_1: 7
+    THROTTLE_POS: 8
+    TIMING_ADVANCE: 9
+  irSe:
+    O2_B1S1: 1
+    O2_B1S2: 2
+    O2_S1_WR_CURRENT: 3
+    O2_S1_WR_VOLTAGE: 4
+    

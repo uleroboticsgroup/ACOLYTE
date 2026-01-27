@@ -27,19 +27,20 @@ class ArgumentsValidator:
         are_valid = True
 
         if self.__arguments.action == 'store':
-            are_valid = are_valid and self.__is_valid_input_file(
-                self.__arguments.input_file)
+            if self.__arguments.way == "rosbag":
+                are_valid = are_valid and self.__is_valid_input_file(
+                    self.__arguments.input_file)
             are_valid = are_valid and self.__is_valid_responsible_name(
                 self.__arguments.responsible)
 
         return are_valid
 
     def __is_valid_input_file(self, input_file: str):
-        if input_file is not (None and "") and os.path.exists(input_file):
+        if input_file is not (None or "") and os.path.exists(input_file):
             input_file_splitted = input_file.split(".")
             extension = input_file_splitted[len(input_file_splitted) - 1]
 
-            if extension == RosBagFileExtensions.DB3 or extension == RosBagFileExtensions.MCAP:
+            if extension in (RosBagFileExtensions.DB3, RosBagFileExtensions.MCAP):
                 return True
 
         self.__logger.critical(
@@ -48,7 +49,7 @@ class ArgumentsValidator:
         return False
 
     def __is_valid_responsible_name(self, responsible_name: str):
-        if responsible_name is not (None and ""):
+        if responsible_name is not (None or ""):
             return True
 
         self.__logger.critical(

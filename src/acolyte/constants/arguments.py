@@ -5,7 +5,7 @@ It contains the Arguments class, which contains only constants related to argume
 """
 
 
-class Arguments:
+class Arguments:  # pylint: disable=too-few-public-methods
     """
     It contains only constants related to arguments.
     Add values as required.
@@ -18,3 +18,4 @@ class Arguments:
     # -w, --way
     WAY_ROSBAG = "rosbag"
     WAY_TOPICS = "topics"
+    WAY_OBD = "obd"
