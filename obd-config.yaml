@@ -1,0 +1,81 @@
+paths:
+  obd_port: '/dev/ttyUSB0'
+  obd_baudrate: 115200
+timings:
+  obd_query_interval: 10 # Max 20 seconds. Higher values prevent records retrieval due to MAX_EMPTY_RETRIES limit.
+  obd_connection_timeout: 30 # Timeout in seconds for OBD connection attempts.
+obd:
+  sysX:
+    BAROMETRIC_PRESSURE: 1
+    CVN: 2
+    DISTANCE_SINCE_DTC_CLEAR: 3
+    EVAP_VAPOR_PRESSURE: 4
+    FREEZE_DTC: 5
+    FUEL_LEVEL: 6
+    FUEL_PRESSURE: 7
+    GET_CURRENT_DTC: 8
+    OBD_COMPLIANCE: 9
+    STATUS: 10
+    STATUS_DRIVE_CYCLE: 11
+    TIME_SINCE_DTC_CLEARED: 12
+    WARMUPS_SINCE_DTC_CLEAR: 13
+  tmpV:
+    CATALYST_TEMP_B1S1: 1
+    COOLANT_TEMP: 2
+    INTAKE_TEMP: 3
+  actD:
+    COMMANDED_EGR: 1
+    COMMANDED_EQUIV_RATIO: 2
+  actV:
+    EGR_ERROR: 1
+    ENGINE_LOAD: 2
+    LONG_FUEL_TRIM_1: 3
+    MAF: 4
+    RPM: 5
+    SPEED: 6
+    SHORT_FUEL_TRIM_1: 7
+    THROTTLE_POS: 8
+    TIMING_ADVANCE: 9
+  irSe:
+    O2_B1S1: 1
+    O2_B1S2: 2
+    O2_S1_WR_CURRENT: 3
+    O2_S1_WR_VOLTAGE: 4
+
+# Mapping of Excel OBD columns to internal field names
+excel_obd:
+  timestamp: 'TIMESTAMP'
+  model: 'MODEL'
+  vehicle_id: 'VEHICLE_ID'
+  mark: 'MARK'
+  barometric_pressure: 'BAROMETRIC_PRESSURE(KPA)'
+  cvn: ''
+  distance_since_dtc_clear: ''
+  evap_vapor_pressure: ''
+  freeze_dtc: ''
+  fuel_level: 'FUEL_LEVEL'
+  fuel_pressure: 'FUEL_PRESSURE'
+  get_current_dtc: ''
+  obd_compliance: ''
+  status: ''
+  status_drive_cycle: ''
+  time_since_dtc_cleared: ''
+  warmups_since_dtc_clear: ''
+  catalyst_temp_b1s1: ''
+  coolant_temp: 'ENGINE_COOLANT_TEMP'
+  intake_temp: 'AIR_INTAKE_TEMP'
+  commanded_egr: ''
+  commanded_equiv_ratio: ''
+  egr_error: ''
+  engine_load: 'ENGINE_LOAD'
+  long_fuel_trim_1: ''
+  maf: 'MAF'
+  rpm: 'ENGINE_RPM'
+  speed: 'SPEED'
+  short_fuel_trim_1: 'SHORT TERM FUEL TRIM BANK 1'
+  throttle_pos: 'THROTTLE_POS'
+  timing_advance: 'TIMING_ADVANCE'
+  o2_b1s1: ''
+  o2_b1s2: ''
+  o2_s1_wr_current: ''
+  o2_s1_wr_voltage: ''

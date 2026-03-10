@@ -19,3 +19,4 @@ class Arguments:  # pylint: disable=too-few-public-methods
     WAY_ROSBAG = "rosbag"
     WAY_TOPICS = "topics"
     WAY_OBD = "obd"
+    WAY_OBD_EXCEL = "obd_excel"

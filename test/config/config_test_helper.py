@@ -118,6 +118,43 @@ class ConfigTestHelper():
                     "O2_B1S1": 1,
                     "O2_B1S2": 2
                 }
+            },
+            ConfigCategories.EXCEL_OBD: {
+                "timestamp": 'TIMESTAMP',
+                "model": 'MODEL',
+                "vehicle_id": 'VEHICLE_ID',
+                "mark": 'MARK',
+                "barometric_pressure": 'BAROMETRIC_PRESSURE(KPA)',
+                "cvn": '',
+                "distance_since_dtc_clear": '',
+                "evap_vapor_pressure": '',
+                "freeze_dtc": '',
+                "fuel_level": 'FUEL_LEVEL',
+                "fuel_pressure": 'FUEL_PRESSURE',
+                "get_current_dtc": '',
+                "obd_compliance": '',
+                "status": '',
+                "status_drive_cycle": '',
+                "time_since_dtc_cleared": '',
+                "warmups_since_dtc_clear": '',
+                "catalyst_temp_b1s1": '',
+                "coolant_temp": 'ENGINE_COOLANT_TEMP',
+                "intake_temp": 'AIR_INTAKE_TEMP',
+                "commanded_egr": '',
+                "commanded_equiv_ratio": '',
+                "egr_error": '',
+                "engine_load": 'ENGINE_LOAD',
+                "long_fuel_trim_1": '',
+                "maf": 'MAF',
+                "rpm": 'ENGINE_RPM',
+                "speed": 'SPEED',
+                "short_fuel_trim_1": 'SHORT TERM FUEL TRIM BANK 1',
+                "throttle_pos": 'THROTTLE_POS',
+                "timing_advance": 'TIMING_ADVANCE',
+                "o2_b1s1": '',
+                "o2_b1s2": '',
+                "o2_s1_wr_current": '',
+                "o2_s1_wr_voltage": ''
             }
         }
 

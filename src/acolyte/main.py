@@ -53,7 +53,7 @@ def parse_arguments():
         "-w",
         "--way",
         default="rosbag",
-        choices=["rosbag", "obd"],
+        choices=["rosbag", "obd", "obd_excel"],
         required='store' in sys.argv,
         help="way to read data",
     )

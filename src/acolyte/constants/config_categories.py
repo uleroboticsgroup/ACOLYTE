@@ -17,3 +17,4 @@ class ConfigCategories:  # pylint: disable=too-few-public-methods
     TOPICS = "topics"
     TIMINGS = "timings"
     OBD = "obd"
+    EXCEL_OBD = "excel_obd"

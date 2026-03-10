@@ -14,8 +14,9 @@ from bcubed.records.overview_data_record import OverviewDataRecord
 
 from acolyte.constants.arguments import Arguments
 from acolyte.reader_daemons.operating_system_reader_daemon import OperatingSystemReaderDaemon
-from acolyte.readers.rosbag_reader_creator import RosbagReaderCreator
+from acolyte.readers.excel_obd_reader_creator import ExcelOBDReaderCreator
 from acolyte.readers.obd_reader_creator import OBDReaderCreator
+from acolyte.readers.rosbag_reader_creator import RosbagReaderCreator
 
 
 class Acolyte:
@@ -55,8 +56,14 @@ class Acolyte:
             self.__logger.info(
                 "Initial timestamp: %d - Final timestamp: %d", min_timestamp, max_timestamp)
 
-            self.__node.get_system_data_records_by_timestamp(
+            system_data_records = self.__node.get_system_data_records_by_timestamp(
                 min_timestamp, max_timestamp)
+
+            for system_data_record in system_data_records:
+                self.__logger.info("%s", system_data_record.to_string())
+
+            self.__logger.info("%d SD records were retrieved.",
+                               len(system_data_records))
 
             self.__node.get_overview_data_record()
 
@@ -91,6 +98,10 @@ class Acolyte:
                 self.__messages_creator = OBDReaderCreator(
                     self.__node, self.__black_box_name, arguments)
 
+            elif arguments.way == Arguments.WAY_OBD_EXCEL:
+                self.__messages_creator = ExcelOBDReaderCreator(
+                    self.__node, self.__black_box_name, arguments)
+
             else:
                 self.__logger.error("Invalid way argument provided.")
                 sys.exit()
@@ -106,7 +117,7 @@ class Acolyte:
             if arguments.operating_system and arguments.way == Arguments.WAY_ROSBAG:
                 self.__stop_daemon(self.__stop_os_reader_daemon)
 
-            if arguments.way == Arguments.WAY_ROSBAG or arguments.way == Arguments.WAY_OBD:
+            if arguments.way in [Arguments.WAY_ROSBAG, Arguments.WAY_OBD, Arguments.WAY_OBD_EXCEL]:
                 self.__logger.info(
                     "Storing remaining records and cleaning files...")
 

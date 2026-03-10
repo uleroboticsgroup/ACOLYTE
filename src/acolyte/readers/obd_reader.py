@@ -21,6 +21,9 @@ from acolyte.config.acolyte_config import AcolyteConfig
 from acolyte.constants.config_categories import ConfigCategories
 from acolyte.constants.config_keys import ConfigKeys
 
+# Used to convert milliseconds to nanoseconds for timestamp consistency
+NANOSECONDS_PER_MILLISECOND = 1000000
+
 
 class OBDReader(Reader):
     """
@@ -179,7 +182,7 @@ class OBDReader(Reader):
         # Set vehicle system info as N/A (not available via standard OBD-II)
         meta_data_record[MetaDataFields.FIELD_SYS_V] = "N/A"
         meta_data_record[MetaDataFields.FIELD_SYS_S] = "N/A"
-        meta_data_record[MetaDataFields.FIELD_NET_N] = "N/A"
+        meta_data_record[MetaDataFields.FIELD_NET_ID] = "N/A"
         meta_data_record[MetaDataFields.FIELD_OSY_T] = "N/A"
         meta_data_record[MetaDataFields.FIELD_SYS_P] = "N/A"
 
@@ -237,8 +240,9 @@ class OBDReader(Reader):
                             failed_queries += 1
                             continue
 
+                        # Convert milliseconds to nanoseconds for timestamp consistency
                         scaled_timestamp = int(
-                            get_current_timestamp()) * 1000000
+                            get_current_timestamp()) * NANOSECONDS_PER_MILLISECOND
                         val = self.__extract_value(resp.value)
 
                         self.__logger.debug(

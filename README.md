@@ -1,6 +1,8 @@
 # ACOLYTE (dAta Curation fOr traceabiLity sYsTEm)
 ACOLYTE is a Python application designed to facilitate traceability in autonomous systems in a cibersecure manner. It has been developed to assist in the automated extraction of data from autonomous systems. The application is available in the form of a command-line tool. Two fundamental options are available:
-- Store records from a rosbag2 file. 
+- Store records.
+    - Reading information from a ROS bag file.
+    - Reading information from the vehicle's OBD-II port.
 - Get stored records by a timeframe. 
 
 This Python application is dependant on BCubed Python library. BCubed is available at [BCubed repository](https://github.com/uleroboticsgroup/BCubed).
@@ -33,30 +35,62 @@ Follow the instructions available in [BCubed README.md](https://github.com/ulero
 ```
 
 
-### Execute ACOLYTE
+## Execute ACOLYTE
+
 1. Ensure the blockchain network is available.
-   - (Optional) Execute an Ethereum simulator.
+    - (Optional) Execute an Ethereum simulator.
 
-1. Update the configuration data in the config.yaml file.
+1. Update the configuration data in the `bcubed-config.yaml` file.
 
-1. Update the configuration data in the topics-config.yaml file.
+1. Configure the environment variable named BCUBED_CONF_FILE to set the `bcubed-config.yaml` path. By default, it is set to `./bcubed-config.yaml`.
 
-#### Store records that are created by reading topic messages from a rosbag2 file
-```
-(.venv) $ acolyte -a store -i <rosbag2_file> -r <responsible> -w rosbag
-```
+### Store records
 
-#### Store records that are created by reading topic messages from a rosbag2 file and monitoring the operating system
-```
-(.venv) $ acolyte -a store -i <rosbag2_file> -r <responsible> -w rosbag -os
-```
+#### 1. Reading information from a ROS bag file
 
-#### Store records that are created by reading information from the vehicle's OBD-II port
-```
-(.venv) $ acolyte -a store -i /dev/null <responsible> -w obd
-```
+4. Update the configuration data in the `topics-config.yaml` file.
 
-#### Get stored records by a timeframe
+1. Configure the environment variable named ACOLYTE_CONF_FILE to set the `topics-config.yaml` path. By default, it is set to `./topics-config.yaml`.
+
+1. Execute the following command:
+    ```
+    (.venv) $ acolyte -a store -i <rosbag2_file> -r <responsible> -w rosbag
+    ```
+
+1. To monitor operating system information too, execute the following command:
+    ```
+    (.venv) $ acolyte -a store -i <rosbag2_file> -r <responsible> -w rosbag -os
+    ```
+
+#### 2. Reading information from the vehicle's OBD-II port
+
+4. Update the configuration data in the `obd-config.yaml` file.
+
+1. Configure the environment variable named ACOLYTE_CONF_FILE to set the `obd-config.yaml` path. By default, it is set to `./topics-config.yaml`.
+
+1. Execute the following command:
+    ```
+    (.venv) $ acolyte -a store -i /dev/null <responsible> -w obd
+    ```
+
+#### 3. Reading information from an Excel file with OBD-II data
+
+4. Update the configuration data in the `obd-config.yaml` file:
+    - In the `excel_obd` section, map the Excel column names to the internal OBD field names.
+    - Use the exact column names from your Excel file as values.
+    - Leave empty (`''`) for fields not present in your Excel.
+
+1. Configure the environment variable named ACOLYTE_CONF_FILE to set the `obd-config.yaml` path. By default, it is set to `./topics-config.yaml`.
+
+1. Execute the following command:
+    ```
+    (.venv) $ acolyte -a store -i <excel_file> -r <responsible> -w obd_excel
+    ```
+
+### Get stored records by a timeframe
+
+1. Execute the following command:
+
 ```
 (.venv) $ acolyte -a get_by_timestamp -ts <timestamp_start> -te <timestamp_end>
 ```
@@ -78,4 +112,3 @@ This research is part of the project TESCAC, financed by “European Union NextG
 <p align="center">
   <img src="./docs/INCIBE.jpg" width="100%" />
 </p>
-

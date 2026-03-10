@@ -49,7 +49,7 @@ class OperatingSystemReader(Reader):
 
         self._create_and_store_system_data_record(
             timestamp,
-            SystemDataFields.FIELD_WIFI, IdUint8ValueUint16Field({
+            SystemDataFields.FIELD_SIGNS, IdUint8ValueUint16Field({
                 IdValueFields.FIELD_ID: 1,
                 IdValueFields.FIELD_VALUE: ethernet_info}))
         self._create_and_store_system_data_record(

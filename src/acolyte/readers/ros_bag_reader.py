@@ -136,7 +136,7 @@ class RosBagReader(Reader):
         meta_data_record[MetaDataFields.FIELD_SYS_M] = self.__os_static_info.get_vendor_id(
         )
         meta_data_record[MetaDataFields.FIELD_BBN_V] = name
-        meta_data_record[MetaDataFields.FIELD_NET_N] = self.__os_static_info.get_network_name()
+        meta_data_record[MetaDataFields.FIELD_NET_ID] = self.__os_static_info.get_network_name()
         meta_data_record[MetaDataFields.FIELD_OSY_T] = self.__os_static_info.get_operating_system_type(
         )
         meta_data_record[MetaDataFields.FIELD_SYS_P] = self.__os_static_info.get_system_processors(
