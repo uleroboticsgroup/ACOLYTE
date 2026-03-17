@@ -5,17 +5,13 @@ timings:
   system_info_retrieval: 10
   rosbag_reading_retry: 5
 topics:
-  /global_costmap/costmap_raw: 1
-  /head_front_camera/rgb/image_raw: 2
-  /joy_priority: 3
-  /local_costmap/voxel_grid: 4
-  /local_costmap/costmap: 5
-  /local_costmap/clearing_endpoints: 6
-  /local_costmap/published_footprint: 7
-  /map: 8
-  /mobile_base_controller/odom: 9
-  /power/is_emergency: 10
-  /rosout: 11
-  /scan_raw: 12
-  /tf: 13
-  /tf_static: 14
+  /head_front_camera/rgb/image_raw: 1
+  /joy_priority: 2
+  /local_costmap/costmap: 3
+  /map: 4
+  /mobile_base_controller/odom: 5
+  /power/is_emergency: 6
+  /rosout: 7
+  /scan_raw: 8
+  /tf: 9
+  /tf_static: 10

@@ -148,10 +148,12 @@ class RosBagReader(Reader):
 
         if self.__operating_system:
             self.__run_daemon(self.__run_os_reader_daemon)
+            # The daemon must not be run again after the first rosbag read attempt
+            self.__operating_system = False
 
         bridge = CvBridge()
 
-        for topic, msg, msg_type, timestamp, i in self.__read_messages():
+        for topic, msg, _, timestamp, i in self.__read_messages():
             # self.__logger.info("Topic: %s", topic)
             # self.__logger.info("Timestamp %s", timestamp)
             # self.__logger.info("Message type %s", msg_type)

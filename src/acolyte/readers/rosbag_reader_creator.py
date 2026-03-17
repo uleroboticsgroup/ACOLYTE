@@ -18,10 +18,10 @@ class RosbagReaderCreator(ReaderCreator):
         super().__init__(node, name, arguments)
         self._reader = reader
         self._rosbag_file = arguments.input_file
-        self.operating_system = arguments.operating_system
+        self._operating_system = arguments.operating_system
 
     def factory_method(self) -> Reader:
         """
         Creates and returns a RosBagReader instance.
         """
-        return RosBagReader(self._node, self._reader, self._rosbag_file, self.operating_system)
+        return RosBagReader(self._node, self._reader, self._rosbag_file, self._operating_system)
