@@ -2,14 +2,14 @@ paths:
   daemon_working_dir: '/tmp/os_daemon/'
   daemon_pid_file: '/tmp/os_daemon/os_daemon.pid'
 timings:
-  system_info_retrieval: 10
+  system_info_retrieval: 20
   rosbag_reading_retry: 5
 topics:
   /head_front_camera/rgb/image_raw: 1
   /joy_priority: 2
   /local_costmap/costmap: 3
   /map: 4
-  /mobile_base_controller/odom: 5
+  /direct_laser_odometry/odom: 5
   /power/is_emergency: 6
   /rosout: 7
   /scan_raw: 8
