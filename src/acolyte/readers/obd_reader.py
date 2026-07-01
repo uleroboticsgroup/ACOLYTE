@@ -264,8 +264,8 @@ class OBDReader(Reader):
                         self._create_and_store_system_data_record(
                             scaled_timestamp, sd_field_name, value_field)
 
-                        self.__logger.info("%s (%d) @ %d -> %s: %s stored",
-                                           pid_name, numeric_id, scaled_timestamp, sd_field_name, val)
+                        self.__logger.debug("%s (%d) @ %d -> %s: %s stored",
+                                            pid_name, numeric_id, scaled_timestamp, sd_field_name, val)
                         successful_queries += 1
 
                     except Exception as e:

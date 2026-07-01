@@ -166,9 +166,12 @@ class ExcelOBDReader(Reader):
                     self._create_and_store_system_data_record(
                         timestamp, sd_field_name, value_field)
 
-                    self.__logger.info(
+                    self.__logger.debug(
                         "%s (%d) @ %d -> %s: %s stored",
                         col, numeric_id, timestamp, sd_field_name, value
                     )
 
-            self.__logger.info("Processed row %d", idx)
+            if idx != 0 and idx % 200 == 0:
+                self.__logger.info("Processed row %d", idx)
+
+        self.__logger.info("Processed row %d", len(self.__data_frame.index))
